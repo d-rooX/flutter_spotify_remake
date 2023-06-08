@@ -134,6 +134,7 @@ class _PlayerControlsBarState extends State<PlayerControlsBar> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // track info
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -155,9 +156,11 @@ class _PlayerControlsBarState extends State<PlayerControlsBar> {
           ],
         ),
         const SizedBox(height: 20),
+
+        // control bar
         Row(
           children: [
-            const Icon(Ionicons.shuffle, size: 27),
+            const Icon(Icons.shuffle, size: 27),
             const Spacer(),
             ControlButton(
               icon: Ionicons.play_skip_back,
@@ -188,10 +191,12 @@ class _PlayerControlsBarState extends State<PlayerControlsBar> {
               onTap: () {},
             ),
             const Spacer(),
-            const Icon(Ionicons.repeat, size: 27)
+            const Icon(Icons.repeat, size: 27)
           ],
         ),
         const SizedBox(height: 15),
+
+        // audiowave
         Expanded(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(25),
@@ -210,7 +215,7 @@ class _PlayerControlsBarState extends State<PlayerControlsBar> {
                 playerWaveStyle: PlayerWaveStyle(
                   backgroundColor: Colors.transparent,
                   liveWaveColor: HSLColor.fromColor(widget.mainColor)
-                      .withLightness(0.3)
+                      .withSaturation(0.8)
                       .toColor(),
                   seekLineThickness: 1.5,
                   seekLineColor: Colors.grey.shade500,

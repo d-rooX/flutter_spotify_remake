@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_remake/core/models/audio_track.dart';
+import 'package:spotify_remake/pages/home/home_page.dart';
 import 'package:spotify_remake/pages/player/player_page.dart';
 
 class App extends StatelessWidget {
@@ -14,7 +15,7 @@ class App extends StatelessWidget {
         textTheme: Typography.whiteCupertino,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      home: const TrackPageLoader(),
+      home: HomePage(),
     );
   }
 }
@@ -31,7 +32,7 @@ class _TrackPageLoaderState extends State<TrackPageLoader> {
 
   @override
   void initState() {
-    _future = AudioTrack.fromAsset('rapeme2.mp3');
+    _future = AudioTrack.fromAsset('kino_night.mp3');
     super.initState();
   }
 

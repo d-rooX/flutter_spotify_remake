@@ -49,10 +49,7 @@ class AudioTrack {
     if (await file.exists() && (await file.length()) > 0) return file;
 
     await file.create();
-    print("FILE CREATED!");
-
     final data = await rootBundle.load('lib/assets/audio/$assetFilename');
-
     await file.writeAsBytes(data.buffer.asUint8List());
 
     return file;
