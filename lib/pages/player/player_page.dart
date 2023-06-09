@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_remake/core/image_analyzer.dart';
 import 'package:spotify_remake/core/models/audio_track.dart';
+import 'package:spotify_remake/core/utils/image_analyzer.dart';
 import 'package:spotify_remake/pages/player/widgets/player_widgets.dart';
 
 class PlayerPage extends StatefulWidget {
