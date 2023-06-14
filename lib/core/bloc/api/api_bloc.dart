@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Colors, showDialog;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotify/spotify.dart';
 import 'package:spotify_remake/constants.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -19,21 +20,67 @@ class ApiBloc extends Bloc<ApiEvent, ApiState> {
     Emitter<ApiState> emit,
   ) async {
     emit(ApiLoadingState());
-    final api = await authorize(event.context);
+    SpotifyApi? api = await useSavedCredentials();
+    api ??= await authorize(event.context);
     emit(ApiLoadedState(api: api));
+  }
+
+  Future<void> saveCredentials(SpotifyApiCredentials credentials) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString('accessToken', credentials.accessToken!);
+    await prefs.setString('refreshToken', credentials.refreshToken!);
+    await prefs.setInt(
+      'expiration',
+      credentials.expiration!.millisecondsSinceEpoch,
+    );
+    await prefs.setStringList('scopes', credentials.scopes!);
+  }
+
+  Future<SpotifyApi?> useSavedCredentials() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final accessToken = prefs.getString('accessToken');
+    final refreshToken = prefs.getString('refreshToken');
+    final expiration = prefs.getInt('expiration');
+    final scopes = prefs.getStringList('scopes');
+
+    if (accessToken != null && scopes != null) {
+      final api = await SpotifyApi.asyncFromCredentials(
+        SpotifyApiCredentials(
+          CLIENT_ID,
+          CLIENT_SECRET,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          expiration: DateTime.fromMillisecondsSinceEpoch(expiration!),
+          scopes: scopes,
+        ),
+      );
+
+      return api;
+    }
+
+    return null;
   }
 
   Future<SpotifyApi> authorize(BuildContext context) async {
     final credentials = SpotifyApiCredentials(CLIENT_ID, CLIENT_SECRET);
     final grant = SpotifyApi.authorizationCodeGrant(credentials);
-    final scopes = ['user-read-recently-played', 'user-read-private'];
+
     final authUri = grant.getAuthorizationUrl(
       Uri.parse(REDIRECT_URL),
-      scopes: scopes,
+      scopes: [
+        'user-read-recently-played',
+        'user-read-private',
+      ],
     );
     final responseUri = await redirect(context, authUri);
+    final api = SpotifyApi.fromAuthCodeGrant(grant, responseUri);
 
-    return SpotifyApi.fromAuthCodeGrant(grant, responseUri);
+    final gotCredentials = await api.getCredentials();
+    await saveCredentials(gotCredentials);
+
+    return api;
   }
 
   Future<String> redirect(BuildContext context, Uri uriToRedirect) async {
