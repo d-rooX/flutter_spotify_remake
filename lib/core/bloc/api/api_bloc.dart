@@ -45,7 +45,9 @@ class ApiBloc extends Bloc<ApiEvent, ApiState> {
     final expiration = prefs.getInt('expiration');
     final scopes = prefs.getStringList('scopes');
 
-    if (accessToken != null && scopes != null) {
+    if (scopes != CLIENT_SCOPES) return null;
+
+    if (accessToken != null) {
       final api = await SpotifyApi.asyncFromCredentials(
         SpotifyApiCredentials(
           CLIENT_ID,
@@ -69,12 +71,9 @@ class ApiBloc extends Bloc<ApiEvent, ApiState> {
 
     final authUri = grant.getAuthorizationUrl(
       Uri.parse(REDIRECT_URL),
-      scopes: [
-        'user-read-recently-played',
-        'user-read-private',
-      ],
+      scopes: CLIENT_SCOPES,
     );
-    final responseUri = await redirect(context, authUri);
+    final responseUri = await showAuthWebView(context, authUri);
     final api = SpotifyApi.fromAuthCodeGrant(grant, responseUri);
 
     final gotCredentials = await api.getCredentials();
@@ -83,7 +82,10 @@ class ApiBloc extends Bloc<ApiEvent, ApiState> {
     return api;
   }
 
-  Future<String> redirect(BuildContext context, Uri uriToRedirect) async {
+  Future<String> showAuthWebView(
+    BuildContext context,
+    Uri uriToRedirect,
+  ) async {
     String? responseURI;
 
     final WebViewController controller = WebViewController()
