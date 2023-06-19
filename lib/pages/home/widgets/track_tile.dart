@@ -32,7 +32,7 @@ class _TrackTileState extends State<TrackTile> {
         borderRadius: BorderRadius.circular(5),
       ),
       padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.all(5),
       child: Row(
         children: [
           FutureBuilderWrapper(
@@ -55,22 +55,26 @@ class _TrackTileState extends State<TrackTile> {
             ),
           ),
           const SizedBox(width: 15),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              RichText(
-                text: getFormattedArtists(),
-                softWrap: false,
-                overflow: TextOverflow.fade,
-              ),
-              Text(
-                widget.track.name ?? '',
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w300,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: getFormattedArtists(),
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
                 ),
-              ),
-            ],
+                Text(
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
+                  widget.track.name ?? '',
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ],
+            ),
           )
         ],
       ),
