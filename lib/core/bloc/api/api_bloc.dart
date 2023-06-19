@@ -11,7 +11,7 @@ part 'api_event.dart';
 part 'api_state.dart';
 
 class ApiBloc extends Bloc<ApiEvent, ApiState> {
-  ApiBloc() : super(ApiNotLoadedState()) {
+  ApiBloc() : super(const ApiState()) {
     on<ApiInitEvent>(_initializeApi);
   }
 
@@ -19,10 +19,9 @@ class ApiBloc extends Bloc<ApiEvent, ApiState> {
     ApiInitEvent event,
     Emitter<ApiState> emit,
   ) async {
-    emit(ApiLoadingState());
     SpotifyApi? api = await useSavedCredentials();
     api ??= await authorize(event.context);
-    emit(ApiLoadedState(api: api));
+    emit(ApiState(api: api));
   }
 
   Future<void> saveCredentials(SpotifyApiCredentials credentials) async {
@@ -45,21 +44,35 @@ class ApiBloc extends Bloc<ApiEvent, ApiState> {
     final expiration = prefs.getInt('expiration');
     final scopes = prefs.getStringList('scopes');
 
-    if (scopes != CLIENT_SCOPES) return null;
-
-    if (accessToken != null) {
-      final api = await SpotifyApi.asyncFromCredentials(
-        SpotifyApiCredentials(
-          CLIENT_ID,
-          CLIENT_SECRET,
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-          expiration: DateTime.fromMillisecondsSinceEpoch(expiration!),
-          scopes: scopes,
-        ),
+    // fixme
+    if (scopes != null) {
+      final scopesEqual = CLIENT_SCOPES.every(
+        (element) => scopes.contains(element),
       );
+      if (!scopesEqual) {
+        print("NOT EQUAL SCOPES");
 
-      return api;
+        return null;
+      }
+    }
+
+    if (accessToken != null && refreshToken != null) {
+      try {
+        final api = await SpotifyApi.asyncFromCredentials(
+          SpotifyApiCredentials(
+            CLIENT_ID,
+            CLIENT_SECRET,
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            expiration: DateTime.fromMillisecondsSinceEpoch(expiration!),
+            scopes: scopes,
+          ),
+        );
+
+        return api;
+      } catch (e) {
+        print("ERRRRRROOOOOOOOOOOR: $e");
+      }
     }
 
     return null;

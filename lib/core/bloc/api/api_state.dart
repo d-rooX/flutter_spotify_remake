@@ -1,19 +1,9 @@
 part of 'api_bloc.dart';
 
-abstract class ApiState extends Equatable {
-  const ApiState();
+class ApiState extends Equatable {
+  final SpotifyApi? api;
 
-  List<Object?> get props => [];
-}
-
-class ApiNotLoadedState extends ApiState {}
-
-class ApiLoadingState extends ApiState {}
-
-class ApiLoadedState extends ApiState {
-  final SpotifyApi api;
+  const ApiState({this.api});
 
   List<Object?> get props => [api];
-
-  const ApiLoadedState({required this.api});
 }

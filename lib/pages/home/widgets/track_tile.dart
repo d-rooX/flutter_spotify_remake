@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spotify/spotify.dart' hide Image;
 import 'package:spotify/spotify.dart' as spotapi;
+import 'package:spotify_remake/constants.dart';
 import 'package:spotify_remake/core/utils/future_builder_wrapper.dart';
 
 class TrackTile extends StatefulWidget {
@@ -15,12 +16,19 @@ class TrackTile extends StatefulWidget {
 
 class _TrackTileState extends State<TrackTile> {
   spotapi.Image? cover;
+  Future<spotapi.Image>? _future;
+
+  @override
+  void initState() {
+    _future = getCover();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.green.withAlpha(80),
+        color: SpotiGreen.withOpacity(0.4),
         borderRadius: BorderRadius.circular(5),
       ),
       padding: const EdgeInsets.all(10),
@@ -28,11 +36,11 @@ class _TrackTileState extends State<TrackTile> {
       child: Row(
         children: [
           FutureBuilderWrapper(
-            future: getCover(),
-            onLoading: (context) => const SizedBox(
+            future: _future!,
+            onLoading: (context) => Container(
               height: 50,
               width: 50,
-              child: CircularProgressIndicator(),
+              color: Colors.white24,
             ),
             onDone: (context, image) => GestureDetector(
               onTap: showFullscreenCover,
@@ -73,12 +81,15 @@ class _TrackTileState extends State<TrackTile> {
     final route = MaterialPageRoute(
       builder: (context) => GestureDetector(
         onTap: () => Navigator.of(context).pop(),
-        child: Hero(
-          tag: "image_${widget.track.id}",
-          child: Image.network(
-            cover?.url ?? '',
-            height: 250,
-            width: 250,
+        child: ColoredBox(
+          color: Colors.transparent,
+          child: Hero(
+            tag: "image_${widget.track.id}",
+            child: Image.network(
+              cover?.url ?? '',
+              height: 250,
+              width: 250,
+            ),
           ),
         ),
       ),
