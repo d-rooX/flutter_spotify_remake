@@ -63,7 +63,7 @@ class _TrackTileState extends State<TrackTile> {
                   overflow: TextOverflow.fade,
                   widget.track.name ?? '',
                   style: const TextStyle(
-                    fontSize: 17,
+                    fontSize: 16,
                     fontWeight: FontWeight.w300,
                   ),
                 ),

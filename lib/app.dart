@@ -15,7 +15,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primaryTextTheme: Typography.whiteCupertino,
         textTheme: Typography.whiteCupertino,
-        iconTheme: const IconThemeData(color: SpotiGreen),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       home: BlocProvider(
         create: (context) => ApiBloc()..add(ApiInitEvent(context: context)),
@@ -31,7 +31,6 @@ class App extends StatelessWidget {
 
 class RootWindow extends StatefulWidget {
   final SpotifyApi api;
-
   const RootWindow({super.key, required this.api});
 
   @override
@@ -57,12 +56,11 @@ class _RootWindowState extends State<RootWindow> {
             color: Colors.grey.shade800,
             borderRadius: BorderRadius.circular(22),
           ),
-          height: 60,
+          height: 65,
           child: BottomNavigationBar(
             currentIndex: _currentIndex,
             backgroundColor: Colors.transparent,
             elevation: 0,
-            enableFeedback: true,
             selectedIconTheme: const IconThemeData(color: SpotiGreen),
             iconSize: 28,
             unselectedIconTheme: IconThemeData(color: Colors.grey.shade900),
@@ -85,7 +83,11 @@ class _RootWindowState extends State<RootWindow> {
           BlocProvider(create: (context) => HomeCubit(api: widget.api)),
           BlocProvider(create: (context) => ImageCacheCubit(api: widget.api))
         ],
-        child: pages.elementAt(_currentIndex),
+        child: SafeArea(
+          // bottom: false,
+          maintainBottomViewPadding: true,
+          child: pages.elementAt(_currentIndex),
+        ),
       ),
     );
   }

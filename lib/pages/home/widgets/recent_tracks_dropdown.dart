@@ -29,7 +29,7 @@ class _RecentTracksDropdownState extends State<RecentTracksDropdown> {
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           decoration: BoxDecoration(
             color: Colors.white24,
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(15),
           ),
           duration: const Duration(milliseconds: 400),
           height: isExpanded ? 500 : 150,
