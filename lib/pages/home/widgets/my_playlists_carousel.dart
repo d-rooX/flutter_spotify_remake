@@ -27,6 +27,8 @@ class _MyPlaylistsCarouselState extends State<MyPlaylistsCarousel> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
+      buildWhen: (previous, current) =>
+          previous.myPlaylists != current.myPlaylists,
       builder: (context, state) {
         final data = state.myPlaylists;
 

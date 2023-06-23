@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:spotify/spotify.dart';
 
@@ -7,9 +9,22 @@ class HomeCubit extends Cubit<HomeState> {
   final SpotifyApi api;
   HomeCubit({required this.api}) : super(HomeState());
 
-  Future<void> getTopArtists() async {
-    final Iterable<Artist> result = await api.me.topArtists();
-    emit(state.copyWith(topArtists: result));
+  Future<void> getRecommendations() async {
+    final fav = await api.tracks.me.saved.getPage(10, Random().nextInt(15));
+    final List<String> seedTracks = [];
+    for (int i = 0; i < 3; i++) {
+      seedTracks.add(
+        fav.items!.elementAt(Random().nextInt(fav.items!.length)).track!.id!,
+      );
+    }
+
+    final recommendations = await api.recommendations.get(
+      seedTracks: seedTracks,
+      seedArtists: (await api.me.topArtists()).map((e) => e.id!).take(2),
+      seedGenres: [],
+      limit: 20,
+    );
+    emit(state.copyWith(recommendations: recommendations));
   }
 
   Future<void> getMyPlaylists() async {

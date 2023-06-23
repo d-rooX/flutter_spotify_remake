@@ -6,7 +6,9 @@ const REDIRECT_URL = "https://spotapi.droox.dev/callback";
 const CLIENT_SCOPES = [
   'user-read-recently-played',
   'user-read-private',
-  'playlist-read-collaborative'
+  'user-top-read',
+  'user-library-read',
+  'playlist-read-collaborative',
 ];
 
 const SpotiGreen = Color(0xFF1db954);

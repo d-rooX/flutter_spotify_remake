@@ -53,7 +53,7 @@ class _RootWindowState extends State<RootWindow> {
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           decoration: BoxDecoration(
-            color: Colors.grey.shade800,
+            color: Colors.grey.shade800.withOpacity(0.9),
             borderRadius: BorderRadius.circular(22),
           ),
           height: 65,
