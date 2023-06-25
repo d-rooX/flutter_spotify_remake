@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotify/spotify.dart' hide Image;
+import 'package:spotify_remake/pages/playlist/playlist_page.dart';
 
 class PlaylistTile extends StatelessWidget {
   final PlaylistSimple playlist;
@@ -7,12 +8,23 @@ class PlaylistTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 250,
-      width: 250,
-      child: Image.network(
-        playlist.images!.first.url!,
-        fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        final route = MaterialPageRoute(
+          builder: (context) => PlaylistPage(playlist: playlist),
+        );
+        Navigator.of(context).push(route);
+      },
+      child: SizedBox(
+        height: 250,
+        width: 250,
+        child: Hero(
+          tag: playlist.id!,
+          child: Image.network(
+            playlist.images!.first.url!,
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
     );
   }
