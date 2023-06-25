@@ -5,7 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify/spotify.dart';
 import 'package:spotify_remake/constants.dart';
 import 'package:spotify_remake/core/bloc/bloc_exports.dart';
+import 'package:spotify_remake/core/bloc/playlist/playlist_cubit.dart';
 import 'package:spotify_remake/pages/home/home_page.dart';
+import 'package:spotify_remake/pages/loading/loading_page.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -24,7 +26,7 @@ class App extends StatelessWidget {
         child: BlocBuilder<ApiBloc, ApiState>(
           builder: (context, state) => state.api != null
               ? RootWindow(api: state.api!)
-              : const Placeholder(),
+              : const LoadingPage(),
         ),
       ),
     );
@@ -62,7 +64,7 @@ class _RootWindowState extends State<RootWindow> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(22),
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 10),
+              filter: ImageFilter.blur(sigmaX: 30, sigmaY: 20),
               child: BottomNavigationBar(
                 currentIndex: _currentIndex,
                 backgroundColor: Colors.transparent,
@@ -90,7 +92,8 @@ class _RootWindowState extends State<RootWindow> {
       body: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => HomeCubit(api: widget.api)),
-          BlocProvider(create: (context) => ImageCacheCubit(api: widget.api))
+          BlocProvider(create: (context) => ImageCacheCubit(api: widget.api)),
+          BlocProvider(create: (context) => PlaylistCubit(api: widget.api)),
         ],
         child: pages.elementAt(_currentIndex),
       ),
