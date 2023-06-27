@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify/spotify.dart';
 import 'package:spotify_remake/constants.dart';
 import 'package:spotify_remake/core/bloc/bloc_exports.dart';
-import 'package:spotify_remake/core/bloc/playlist/playlist_cubit.dart';
 import 'package:spotify_remake/pages/home/home_page.dart';
 import 'package:spotify_remake/pages/loading/loading_page.dart';
 
@@ -93,7 +92,6 @@ class _RootWindowState extends State<RootWindow> {
         providers: [
           BlocProvider(create: (context) => HomeCubit(api: widget.api)),
           BlocProvider(create: (context) => ImageCacheCubit(api: widget.api)),
-          BlocProvider(create: (context) => PlaylistCubit(api: widget.api)),
         ],
         child: pages.elementAt(_currentIndex),
       ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify/spotify.dart' hide Image;
+import 'package:spotify_remake/core/bloc/bloc_exports.dart';
 import 'package:spotify_remake/pages/playlist/playlist_page.dart';
 
 class PlaylistTile extends StatelessWidget {
@@ -8,10 +10,24 @@ class PlaylistTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final api = context.read<ApiBloc>().state.api!;
+    final imageCache = context.read<ImageCacheCubit>();
+
     return GestureDetector(
       onTap: () {
         final route = MaterialPageRoute(
-          builder: (context) => PlaylistPage(playlist: playlist),
+          builder: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => PlaylistCubit(
+                  api: api,
+                  playlist: playlist,
+                )..load(),
+              ),
+              BlocProvider.value(value: imageCache)
+            ],
+            child: const PlaylistPage(),
+          ),
         );
         Navigator.of(context).push(route);
       },
