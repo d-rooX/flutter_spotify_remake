@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify/spotify.dart' as spotapi;
@@ -7,18 +8,27 @@ import 'package:spotify_remake/pages/home/widgets/home_widget.dart';
 import 'package:spotify_remake/pages/home/widgets/my_playlists_carousel.dart';
 import 'package:spotify_remake/pages/home/widgets/track_list.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
-    return const DecoratedBox(
-      decoration: BoxDecoration(color: Colors.black),
+    final topPadding = MediaQuery.of(context).padding.top;
+
+    return DecoratedBox(
+      decoration: const BoxDecoration(color: Colors.black),
       child: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        dragStartBehavior: DragStartBehavior.down,
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            Padding(
+            SizedBox(height: topPadding),
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -37,13 +47,13 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-            HomeWidget(
+            const HomeWidget(
               title: "Your playlists",
               child: MyPlaylistsCarousel(),
             ),
-            RecentTracksHomeWidget(),
-            RecommendationsHomeWidget(),
-            SizedBox(height: 60),
+            const RecentTracksHomeWidget(),
+            const RecommendationsHomeWidget(),
+            const SizedBox(height: 60),
           ],
         ),
       ),

@@ -24,6 +24,7 @@ class _TrackTileState extends State<TrackTile> {
         children: [
           BlocBuilder<ImageCacheCubit, ImageCacheState>(
             buildWhen: (previous, current) =>
+                coverImage == null &&
                 current.cache.containsKey(widget.track.id!),
             builder: (context, state) {
               final imageCacheCubit = context.read<ImageCacheCubit>();

@@ -10,6 +10,8 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit({required this.api}) : super(HomeState());
 
   Future<void> getRecommendations() async {
+    print('getRecommendations');
+
     final fav = await api.tracks.me.saved.getPage(10, Random().nextInt(15));
     final List<String> seedTracks = [];
     for (int i = 0; i < 3; i++) {
@@ -28,11 +30,15 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> getMyPlaylists() async {
+    print("getMyPlaylists");
+
     final result = await api.playlists.me.all();
     emit(state.copyWith(myPlaylists: result));
   }
 
   Future<void> getRecentTracks() async {
+    print("getRecentTracks");
+
     final result = await api.me.recentlyPlayed().all();
     emit(state.copyWith(recentTracks: result));
   }

@@ -27,31 +27,35 @@ class HomeWidget extends StatefulWidget {
 class _HomeWidgetState extends State<HomeWidget> {
   bool _expanded = false;
 
+  void onExpand() => setState(() => _expanded = !_expanded);
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: widget.margin ?? const EdgeInsets.symmetric(vertical: 15),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                if (widget.onExpanded != null)
-                  GestureDetector(
-                    onTap: () => setState(() => _expanded = !_expanded),
-                    child: Icon(
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: widget.onExpanded != null ? onExpand : () {},
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  if (widget.onExpanded != null)
+                    Icon(
                       _expanded
                           ? Icons.keyboard_arrow_up
                           : Icons.keyboard_arrow_down_rounded,
-                    ),
-                  )
-              ],
+                    )
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 15),

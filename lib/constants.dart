@@ -8,6 +8,7 @@ const CLIENT_SCOPES = [
   'user-read-private',
   'user-top-read',
   'user-library-read',
+  'playlist-read-private',
   'playlist-read-collaborative',
 ];
 
